@@ -47,36 +47,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.disable()) // Nếu có lỗi CORS, có thể bật lên
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers("/auth/**").permitAll()
-            		.requestMatchers("/services/**").permitAll()
-            		.requestMatchers("/service-fees/**").permitAll()
-            		.requestMatchers("/residents/**").permitAll()
-            		.requestMatchers("/payments/**").permitAll()
-            		.requestMatchers("/invoices/**").permitAll()
-            		.requestMatchers("/apartments/**").permitAll()
-
-            		// Chỉ cho phép ADMIN truy cập danh sách tất cả thông báo
-            		.requestMatchers("/notifications/all").hasRole("ADMIN")
-
-            		// Người dùng đã đăng nhập có thể xem thông báo của họ
-            		.requestMatchers("/notifications/user/**").authenticated()
-
-            		// Các API admin yêu cầu quyền ADMIN
-            		.requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-            		// API khiếu nại cho cả USER & ADMIN
-            		.requestMatchers("/api/complaints/**").hasAnyRole("USER", "ADMIN")
-
-            		// Tất cả các request khác cần xác thực
-            		.anyRequest().authenticated()
-
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/services/**").permitAll()
+                .requestMatchers("/service-fees/**").permitAll()
+                .requestMatchers("/residents/**").permitAll()
+                .requestMatchers("/payments/**").permitAll()
+                .requestMatchers("/invoices/**").permitAll()
+                .requestMatchers("/apartments/**").permitAll()
+                .requestMatchers("/notifications/all").hasRole("ADMIN")
+                .requestMatchers("/notifications/user/**").authenticated()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/complaints/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 }

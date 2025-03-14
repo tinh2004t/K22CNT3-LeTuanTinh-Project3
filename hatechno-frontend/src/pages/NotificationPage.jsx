@@ -10,10 +10,11 @@ const NotificationPage = () => {
     
     const userId = localStorage.getItem("userId"); 
     const userRole = localStorage.getItem("userRole"); // Lấy role từ localStorage
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
     const isAdmin = userRole === "ADMIN";
 
     useEffect(() => {
-        if (!userId) {
+        if (!userId || !token) {
             navigate("/login");
             return;
         }
@@ -26,7 +27,9 @@ const NotificationPage = () => {
                 ? "http://localhost:8080/notifications/all"  // Nếu admin, lấy tất cả thông báo
                 : `http://localhost:8080/notifications/user/${userId}`;
 
-            const response = await axios.get(url);
+            const response = await axios.get(url, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setNotifications(response.data);
         } catch (error) {
             console.error("Lỗi khi lấy thông báo:", error);
@@ -36,9 +39,18 @@ const NotificationPage = () => {
     const sendNotification = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/notifications/send", {
-                userId, title, message
-            });
+            if (!token) {
+                console.error("Không tìm thấy token!");
+                navigate("/login");
+                return;
+            }
+
+            const response = await axios.post("http://localhost:8080/notifications/send", 
+                { userId, title, message },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
             alert("Thông báo đã gửi thành công!");
             setTitle("");
             setMessage("");
@@ -51,7 +63,15 @@ const NotificationPage = () => {
     const deleteNotification = async (id) => {
         if (!window.confirm("Bạn có chắc muốn xóa thông báo này?")) return;
         try {
-            await axios.delete(`http://localhost:8080/notifications/delete/${id}`);
+            if (!token) {
+                console.error("Không tìm thấy token!");
+                navigate("/login");
+                return;
+            }
+
+            await axios.delete(`http://localhost:8080/notifications/delete/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setNotifications(notifications.filter((n) => n.id !== id));
             alert("Đã xóa thông báo.");
         } catch (error) {
