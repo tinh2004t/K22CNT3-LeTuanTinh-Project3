@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import NotificationService from "../services/TempService";
-import { Users, Home, DollarSign, Bell, Layout, LogOut, LogIn, UserPlus, Settings, Menu, X } from 'lucide-react';
+import { Users, Home, DollarSign, Bell, Layout, LogOut, LogIn, UserPlus, Settings, Menu, X, MessageSquare } from 'lucide-react';
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
@@ -124,6 +124,16 @@ function Navbar() {
               <span>{isAdminOrManager ? "Hóa đơn" : "Kiểm tra hóa đơn"}</span>
             </Link>
           </li>
+          
+          {/* Thêm link Phản ánh */}
+          {user && (
+            <li>
+              <Link to="/complaints" className="flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200">
+                <MessageSquare size={18} />
+                <span>Phản ánh</span>
+              </Link>
+            </li>
+          )}
           
           {user && (
             <li className="relative" ref={dropdownRef}>
@@ -249,6 +259,16 @@ function Navbar() {
               label={isAdminOrManager ? "Hóa đơn" : "Kiểm tra hóa đơn"} 
               onClick={() => setIsMenuOpen(false)} 
             />
+            
+            {/* Thêm Phản ánh vào mobile menu */}
+            {user && (
+              <MobileNavItem 
+                to="/complaints" 
+                icon={<MessageSquare size={18} />} 
+                label="Phản ánh" 
+                onClick={() => setIsMenuOpen(false)} 
+              />
+            )}
             
             {user && (
               <MobileNavItem to="/notifications" icon={<Bell size={18} />} label="Thông báo" onClick={() => setIsMenuOpen(false)} />

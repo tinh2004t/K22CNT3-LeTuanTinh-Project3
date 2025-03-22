@@ -91,6 +91,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/notifications/**").hasAuthority("ADMIN") // Chỉ ADMIN sửa
                 .requestMatchers(HttpMethod.DELETE, "/api/notifications/**").hasAuthority("ADMIN") // Chỉ ADMIN xóa
                 
+                //complaint
+                .requestMatchers(HttpMethod.GET, "/api/complaints/**").hasAnyAuthority("USER", "ADMIN") // USER & ADMIN có thể xem danh sách
+                .requestMatchers(HttpMethod.POST, "/api/complaints/**").hasAuthority("USER") // Chỉ ADMIN thêm
+                .requestMatchers(HttpMethod.PUT, "/api/complaints/**").hasAnyAuthority("USER","ADMIN") // Chỉ ADMIN sửa
+                 
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

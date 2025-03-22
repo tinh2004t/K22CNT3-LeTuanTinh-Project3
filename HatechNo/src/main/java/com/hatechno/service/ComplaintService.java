@@ -36,4 +36,9 @@ public class ComplaintService {
         }
         throw new RuntimeException("Complaint not found!");
     }
+
+    public List<Complaint> getAllComplaints() {
+        return complaintRepository.findAll();
+    }
+
 }

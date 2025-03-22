@@ -8,7 +8,8 @@ import Residents from "./pages/Residents";
 import Apartments from "./pages/Apartments";
 import Services from "./pages/Services";
 import AddServiceFeePage from "./pages/AddServiceFeePage.jsx";
-import NotificationPage from "./pages/NotificationPage"; // Thêm import
+import NotificationPage from "./pages/NotificationPage";
+import ComplaintPage from "./pages/ComplaintPage"; // Thêm import
 
 import InvoicePaymentManagement from "./pages/InvoicePayment";
 import UserInvoiceChecker from "./pages/UserInvoiceChecker";
@@ -42,10 +43,17 @@ function App() {
                 : <UserInvoiceChecker />
             } />
 
-            {/* Thêm route cho trang thông báo */}
+            {/* Trang thông báo */}
             <Route path="/notifications" element={
               <ProtectedRoute>
                 <NotificationPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Thêm route cho trang phản ánh */}
+            <Route path="/complaints" element={
+              <ProtectedRoute>
+                <ComplaintPage />
               </ProtectedRoute>
             } />
             

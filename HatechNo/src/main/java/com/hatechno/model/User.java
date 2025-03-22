@@ -20,6 +20,7 @@ public class User {
 	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Notification> notifications;
+	
 
 
     @Id
