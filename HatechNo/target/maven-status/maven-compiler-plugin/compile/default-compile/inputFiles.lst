@@ -1,5 +1,5 @@
-C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\config\SecurityConfig.java
-C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\config\WebConfig.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\config\CorsConfig.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\config\CorsFilter.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\controller\ApartmentController.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\controller\AuthController.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\controller\ComplaintController.java
@@ -23,6 +23,7 @@ C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hate
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\PaymentMethod.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\PaymentStatus.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\Resident.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\Role.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\ServiceEntity.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\ServiceFeeEntity.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\model\User.java
@@ -36,7 +37,12 @@ C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hate
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\repository\ServiceRepository.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\repository\UserRepository.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\JwtAuthenticationFilter.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\JwtFilter.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\JwtTokenProvider.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\JwtUtil.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\SecurityConfig.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\UserDetailsImpl.java
+C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\security\UserDetailsServiceImpl.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\ApartmentService.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\ComplaintService.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\GenerateSecretKey.java
@@ -46,5 +52,4 @@ C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hate
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\ResidentService.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\ServiceFeeService.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\ServiceService.java
-C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\UserDetailsServiceImpl.java
 C:\Users\ROG\Desktop\K22CNT3-LeTuanTinh-Project3\HatechNo\src\main\java\com\hatechno\service\UserService.java

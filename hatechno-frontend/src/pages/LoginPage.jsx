@@ -50,7 +50,7 @@ const LoginPage = () => {
     setLoginError("");
     
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", formData);
+      const response = await axios.post("http://localhost:8080/api/auth/login", formData);
       if (response.data && response.data.token) {
         login(response.data.token, response.data);
         navigate("/dashboard");

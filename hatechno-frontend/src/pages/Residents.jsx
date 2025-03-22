@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getResidents, addResident, updateResident, deleteResident } from "../api/residentApi";
 import { AlertCircle, PlusCircle, Search, Edit2, Trash2, CheckCircle, XCircle, Users, Home } from "lucide-react";
 
+
 function Residents() {
   const [residents, setResidents] = useState([]);
   const [newResident, setNewResident] = useState({ fullName: "", apartmentId: "", phone: "", email: "" });

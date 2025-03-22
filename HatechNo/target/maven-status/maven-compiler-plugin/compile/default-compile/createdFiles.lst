@@ -1,11 +1,11 @@
 com\hatechno\repository\ServiceFeeRepository.class
 com\hatechno\service\UserService.class
 com\hatechno\repository\ComplaintRepository.class
+com\hatechno\security\JwtUtil.class
 com\hatechno\service\PaymentService.class
 com\hatechno\controller\PaymentController.class
 com\hatechno\HatechNoApplication.class
 com\hatechno\model\Resident.class
-com\hatechno\config\SecurityConfig.class
 com\hatechno\controller\InvoiceController.class
 com\hatechno\model\Notification.class
 com\hatechno\model\Payment.class
@@ -26,10 +26,8 @@ com\hatechno\security\JwtAuthenticationFilter.class
 com\hatechno\repository\NotificationRepository.class
 com\hatechno\model\User$UserBuilder.class
 com\hatechno\service\InvoiceService.class
-com\hatechno\config\WebConfig$1.class
 com\hatechno\model\ServiceEntity.class
 com\hatechno\controller\AuthController.class
-com\hatechno\config\WebConfig.class
 com\hatechno\model\Notification$NotificationBuilder.class
 com\hatechno\dto\AuthRequest.class
 com\hatechno\model\PaymentStatus.class
@@ -44,7 +42,7 @@ com\hatechno\service\ServiceService.class
 com\hatechno\controller\ServiceController.class
 com\hatechno\model\InvoiceStatus.class
 com\hatechno\model\ServiceFeeEntity.class
-com\hatechno\service\UserDetailsServiceImpl.class
+com\hatechno\security\JwtFilter.class
 com\hatechno\service\ResidentService.class
 com\hatechno\repository\ServiceRepository.class
 com\hatechno\dto\ComplaintDTO.class

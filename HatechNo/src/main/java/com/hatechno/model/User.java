@@ -39,8 +39,9 @@ public class User {
     @Column(nullable = false)
     private String fullName;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role; // ADMIN, RESIDENT
+    private Role role; // ADMIN, USER
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     

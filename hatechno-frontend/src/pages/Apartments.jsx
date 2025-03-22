@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { getApartments, addApartment, updateApartment, deleteApartment } from "../api/apartmentApi";
 
+
+const userRole = localStorage.getItem("role"); // "USER" hoặc "ADMIN"
+
 const statusOptions = [
   { value: "Trống", label: "Trống", color: "bg-green-100 text-green-800" },
   { value: "Đã có chủ", label: "Đã có chủ", color: "bg-blue-100 text-blue-800" },
@@ -170,12 +173,14 @@ function Apartments() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">🏢 Quản lý Căn hộ</h1>
+        {userRole === "ADMIN" && (
         <button 
           onClick={() => openModal()} 
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
         >
           <span className="mr-2">➕</span> Thêm căn hộ
         </button>
+        )}
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -230,9 +235,11 @@ function Apartments() {
                     onClick={() => handleSort("status")}>
                     Trạng thái {getSortIndicator("status")}
                   </th>
+                  {userRole === "ADMIN" && (
                   <th className="p-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     Hành động
                   </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -244,6 +251,7 @@ function Apartments() {
                     <td className="p-3 whitespace-nowrap">
                       {getStatusBadge(apartment.status)}
                     </td>
+                    {userRole === "ADMIN" && (
                     <td className="p-3 whitespace-nowrap text-right">
                       <button 
                         onClick={() => openModal(apartment)} 
@@ -258,6 +266,7 @@ function Apartments() {
                         Xóa
                       </button>
                     </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

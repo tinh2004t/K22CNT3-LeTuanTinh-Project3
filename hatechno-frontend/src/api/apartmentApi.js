@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/apartments"; // Đường dẫn API của backend
+const API_URL = "http://localhost:8080/api/apartments"; // Đường dẫn API của backend
+
+const getToken = () => localStorage.getItem("token");
 
 export const getApartments = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(API_URL,{
+      headers: { 
+        "Authorization": `Bearer ${getToken()}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách căn hộ:", error);
@@ -15,7 +21,9 @@ export const getApartments = async () => {
 export const addApartment = async (apartment) => {
   try {
     const response = await axios.post(API_URL, apartment, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" ,
+      "Authorization": `Bearer ${getToken()}`},
+      
     });
     return response.data;
   } catch (error) {
@@ -27,7 +35,8 @@ export const addApartment = async (apartment) => {
 export const updateApartment = async (id, apartment) => {
   try {
     await axios.put(`${API_URL}/${id}`, apartment, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" ,
+      "Authorization": `Bearer ${getToken()}`},
     });
   } catch (error) {
     console.error("Lỗi khi cập nhật căn hộ:", error);
@@ -37,7 +46,11 @@ export const updateApartment = async (id, apartment) => {
 
 export const deleteApartment = async (id) => {
   try {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL}/${id}`,{
+      headers: { 
+        "Authorization": `Bearer ${getToken()}`
+      }
+    });
   } catch (error) {
     console.error("Lỗi khi xóa căn hộ:", error);
     throw error;

@@ -3,6 +3,7 @@ package com.hatechno.controller;
 import com.hatechno.model.Notification;
 import com.hatechno.service.NotificationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,8 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/api/notifications")
+@PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -23,6 +25,7 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Notification> sendNotification(@RequestBody Map<String, String> request) {
         Long userId = Long.parseLong(request.get("userId"));
         String title = request.get("title");
@@ -32,24 +35,20 @@ public class NotificationController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
         return ResponseEntity.ok(notificationService.getNotificationsForUser(userId));
     }
 
     // API lấy tất cả thông báo (chỉ ADMIN)
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<?> getAllNotifications(Authentication authentication) {
         // In ra danh sách role để kiểm tra
-        List<String> roles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        System.out.println("User roles: " + roles); // Debug
+        
 
         // Kiểm tra nếu không phải ADMIN -> từ chối truy cập
-        if (!roles.contains("ROLE_ADMIN")) {
-            return ResponseEntity.status(403).body("Bạn không có quyền truy cập.");
-        }
+        
 
         return ResponseEntity.ok(notificationService.getAllNotifications());
     }

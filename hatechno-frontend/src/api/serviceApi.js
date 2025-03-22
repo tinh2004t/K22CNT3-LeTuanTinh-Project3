@@ -1,16 +1,17 @@
 import axios from "axios";
+import authService from "./authService"; // ✅ Import đúng
 
-const BASE_URL = "http://localhost:8080/"; // Đảm bảo đường dẫn đúng
+const BASE_URL = "http://localhost:8080/api/"; // Đảm bảo đường dẫn đúng
 
 // Lấy token từ localStorage (hoặc nơi khác nếu cần)
-const token = localStorage.getItem("token");
+const getToken = () => localStorage.getItem("token");
 
 // Tạo instance axios với cấu hình mặc định
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }), // Thêm token nếu có
+    ...(getToken() && { Authorization: `Bearer ${getToken()}` }), // Thêm token nếu có
   },
 });
 
@@ -73,6 +74,12 @@ export const deleteService = async (serviceId) => {
 
 // 🛠 **Phí Dịch vụ**
 export const getServiceFees = async () => {
+  const role = authService.getUserRole(); // ✅ Lấy role đúng cách
+  if (role !== "ADMIN") {
+    console.warn("Bạn không có quyền lấy dữ liệu phí dịch vụ.");
+    return []; // Hoặc throw error nếu cần
+  }
+
   try {
     const response = await api.get("/service-fees");
     return response.data;
@@ -83,22 +90,24 @@ export const getServiceFees = async () => {
 
 export const addServiceFee = async (serviceFee) => {
   try {
-    // ✅ Chuyển đổi dữ liệu về đúng format
+    // ✅ Định dạng lại dữ liệu đúng chuẩn API yêu cầu
     const formattedData = {
       amount: serviceFee.amount,
       startDate: serviceFee.startDate,
       endDate: serviceFee.endDate,
-      service: { serviceId: serviceFee.serviceId },   // Đưa vào object
-      apartment: { apartmentId: serviceFee.apartmentId } // Đưa vào object
+      service: { serviceId: serviceFee.service?.serviceId || serviceFee.serviceId }, 
+      apartment: { apartmentId: serviceFee.apartment?.apartmentId || serviceFee.apartmentId }
     };
+
+    console.log("Dữ liệu gửi lên API:", formattedData); // 🐞 Debug dữ liệu gửi đi
 
     const response = await api.post("/service-fees", formattedData);
     return response.data;
   } catch (error) {
+    console.error("Lỗi khi thêm phí dịch vụ:", error);
     handleApiError(error, "adding service fee");
   }
 };
-
 
 export const updateServiceFee = async (serviceFeeId, updatedServiceFee) => {
   try {
@@ -114,5 +123,14 @@ export const deleteServiceFee = async (serviceFeeId) => {
     await api.delete(`/service-fees/${serviceFeeId}`);
   } catch (error) {
     handleApiError(error, "deleting service fee");
+  }
+};
+
+export const getApartments = async () => {
+  try {
+    const response = await api.get("/apartments");
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "fetching apartments");
   }
 };

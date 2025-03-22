@@ -1,76 +1,59 @@
 package com.hatechno.controller;
 
+import com.hatechno.model.Role;
 import com.hatechno.model.User;
 import com.hatechno.repository.UserRepository;
-import com.hatechno.security.JwtTokenProvider;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import com.hatechno.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService; // Thêm UserDetailsService để lấy UserDetails
+    private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider,
-                          UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
     public String register(@RequestBody User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return "Username already exists!";
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getRole() == null) { // 🆕 Nếu chưa có role, gán mặc định
+            user.setRole(Role.USER);
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Mã hóa mật khẩu
         userRepository.save(user);
         return "User registered successfully!";
     }
 
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-        );
+    public Map<String, String> login(@RequestBody User user) {
+        User existingUser = userRepository.findByUsername(user.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 🔹 Lấy User từ Database
-        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "User not found"));
+        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
         }
-        User loggedInUser = optionalUser.get();
 
-        // 🔹 Tạo JWT Token
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        String token = jwtTokenProvider.generateToken(userDetails);
+        String role = existingUser.getRole().name(); // 🆕 Lấy role của user
+        String token = jwtUtil.generateToken(existingUser.getUsername(), role);
+        String userId = String.valueOf(existingUser.getId()); // 🆕 Lấy userId
 
-        // 🔹 Trả về đầy đủ thông tin người dùng
-        return ResponseEntity.ok(Map.of(
+        return Map.of(
             "token", token,
-            "id", loggedInUser.getId(),
-            "username", loggedInUser.getUsername(),
-            "email", loggedInUser.getEmail(),
-            "role", loggedInUser.getRole()
-        ));
+            "role", role,
+            "userId", userId// 🆕 Trả về role
+        );
     }
 
 }

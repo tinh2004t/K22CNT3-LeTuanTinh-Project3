@@ -85,7 +85,7 @@ const RegisterPage = () => {
     const { confirmPassword, ...registerPayload } = formData;
     
     try {
-      await axios.post("http://localhost:8080/auth/register", registerPayload);
+      await axios.post("http://localhost:8080/api/auth/register", registerPayload);
       navigate("/login", { state: { message: "Đăng ký thành công! Vui lòng đăng nhập." } });
     } catch (error) {
       console.error("Đăng ký thất bại:", error);

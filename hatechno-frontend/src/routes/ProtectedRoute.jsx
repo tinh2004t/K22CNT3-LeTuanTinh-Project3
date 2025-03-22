@@ -7,4 +7,11 @@ const ProtectedRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" />;
 };
 
-export default ProtectedRoute;
+const RedirectIfLoggedIn = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  return user ? <Navigate to="/dashboard" /> : children;
+};
+
+
+export { ProtectedRoute, RedirectIfLoggedIn };
+

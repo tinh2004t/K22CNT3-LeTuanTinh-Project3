@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { getInvoices, addInvoice } from "../api/invoiceApi";
 import { getPayments, addPayment } from "../api/paymentApi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const InvoicePaymentManagement = () => {
   const [invoices, setInvoices] = useState([]);
@@ -16,6 +19,8 @@ const InvoicePaymentManagement = () => {
     dueDate: new Date().toISOString().split('T')[0], 
     status: "CHUA_THANH_TOAN" 
   });
+
+  
   
   const [newPayment, setNewPayment] = useState({ 
     invoiceId: "", 
@@ -35,6 +40,9 @@ const InvoicePaymentManagement = () => {
         getInvoices(),
         getPayments()
       ]);
+      console.log("Dữ liệu hóa đơn từ API:", invoiceData);
+      console.log("Dữ liệu thanh toán từ API:", paymentData);
+
       setInvoices(invoiceData);
       setPayments(paymentData);
     } catch (error) {
@@ -47,51 +55,90 @@ const InvoicePaymentManagement = () => {
   const handleAddInvoice = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      const addedInvoice = await addInvoice(newInvoice);
-      setInvoices([...invoices, addedInvoice]);
-      setNewInvoice({ 
-        residentId: "", 
-        amount: "", 
-        dueDate: new Date().toISOString().split('T')[0], 
-        status: "CHUA_THANH_TOAN" 
-      });
-      showNotification("Hóa đơn đã được thêm thành công!", "success");
-    } catch (error) {
-      showNotification("Lỗi khi thêm hóa đơn. Vui lòng thử lại.", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleAddPayment = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
     try {
-      const addedPayment = await addPayment(newPayment);
-      setPayments([...payments, addedPayment]);
-      
-      // Cập nhật trạng thái hóa đơn thành "ĐÃ_THANH_TOÁN"
-      const updatedInvoices = invoices.map(invoice => 
-        invoice.invoiceId === newPayment.invoiceId 
-          ? { ...invoice, status: "DA_THANH_TOAN" }
-          : invoice
-      );
-      setInvoices(updatedInvoices);
-      
-      setNewPayment({ 
-        invoiceId: "", 
-        amount: "", 
-        paymentDate: new Date().toISOString().split('T')[0], 
-        method: "MOMO" 
-      });
-      showNotification("Thanh toán đã được ghi nhận thành công!", "success");
+        const invoiceData = {
+            resident: { residentId: newInvoice.residentId },
+            amount: newInvoice.amount,
+            dueDate: newInvoice.dueDate,
+            status: newInvoice.status
+        };
+
+        const addedInvoice = await addInvoice(invoiceData);
+        setInvoices([...invoices, addedInvoice]);
+
+        // Reset form
+        setNewInvoice({
+            residentId: "",
+            amount: "",
+            dueDate: new Date().toISOString().split('T')[0],
+            status: "CHUA_THANH_TOAN"
+        });
+
+        // Hiển thị thông báo
+        showToast("Thêm hóa đơn thành công!", "success");
+
+
+        // Chuyển về tab "invoices"
+        setActiveTab("invoices");
+
     } catch (error) {
-      showNotification("Lỗi khi thêm thanh toán. Vui lòng thử lại.", "error");
+      showToast("Lỗi khi thêm hóa đơn. Vui lòng thử lại.", "error");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
+
+const handleAddPayment = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+
+  // Đảm bảo dữ liệu hợp lệ trước khi gửi API
+  if (!newPayment.invoiceId || !newPayment.amount) {
+      showNotification("Vui lòng nhập đủ thông tin thanh toán", "error");
+      setIsLoading(false);
+      return;
+  }
+
+  try {
+      const formattedPayment = {
+          invoice: { invoiceId: newPayment.invoiceId }, // Fix invoice
+          amount: newPayment.amount,
+          paymentDate: newPayment.paymentDate,
+          method: newPayment.method
+      };
+
+      console.log("Dữ liệu gửi lên API:", formattedPayment);
+
+      const addedPayment = await addPayment(formattedPayment);
+      setPayments([...payments, addedPayment]);
+
+      // Cập nhật trạng thái hóa đơn
+      setInvoices(invoices.map(invoice => 
+          invoice.invoiceId === newPayment.invoiceId 
+              ? { ...invoice, status: "DA_THANH_TOAN" }
+              : invoice
+      ));
+
+      // Reset form
+      setNewPayment({ 
+          invoiceId: "", 
+          amount: "", 
+          paymentDate: new Date().toISOString().split('T')[0], 
+          method: "MOMO" 
+      });
+
+      showToast("Thanh toán đã được ghi nhận thành công!", "success");
+      setActiveTab("invoices");
+  } catch (error) {
+      console.error("Lỗi khi thêm thanh toán:", error);
+      showToast("Lỗi khi thêm thanh toán. Vui lòng thử lại.", "error");
+  } finally {
+      setIsLoading(false);
+  }
+};
+
 
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type });
@@ -99,6 +146,15 @@ const InvoicePaymentManagement = () => {
       setNotification({ show: false, message: "", type: "" });
     }, 3000);
   };
+
+  const showToast = (message, type) => {
+    if (type === "success") {
+        toast.success(message, { position: "top-right", autoClose: 3000 });
+    } else if (type === "error") {
+        toast.error(message, { position: "top-right", autoClose: 3000 });
+    }
+};
+
 
   const filteredInvoices = invoices.filter(invoice => 
     invoice.invoiceId?.toString().includes(searchTerm) || 
@@ -266,7 +322,7 @@ const InvoicePaymentManagement = () => {
                       .filter(invoice => invoice.status !== "DA_THANH_TOAN")
                       .map(invoice => (
                         <option key={invoice.invoiceId} value={invoice.invoiceId}>
-                          {`#${invoice.invoiceId} - Cư dân: ${invoice.residentId} - ${invoice.amount} VND`}
+                          {`#${invoice.invoiceId} - Cư dân: ${invoice.resident.residentId} - ${invoice.amount} VND`}
                         </option>
                       ))
                     }
@@ -359,7 +415,7 @@ const InvoicePaymentManagement = () => {
                           #{invoice.invoiceId}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {invoice.residentId}
+                        {invoice.resident ? invoice.resident.fullName : "Không có dữ liệu"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {parseInt(invoice.amount).toLocaleString()} VND
@@ -422,7 +478,7 @@ const InvoicePaymentManagement = () => {
                           #{payment.paymentId}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          #{payment.invoiceId}
+                          #{payment.invoice.invoiceId}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {parseInt(payment.amount).toLocaleString()} VND
@@ -442,7 +498,9 @@ const InvoicePaymentManagement = () => {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
+    
   );
 };
 

@@ -4,7 +4,6 @@ import com.hatechno.model.Resident;
 import com.hatechno.repository.ResidentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +18,10 @@ public class ResidentService {
 
     public Optional<Resident> getResidentById(int id) {
         return residentRepository.findById(id);
+    }
+
+    public Optional<Resident> getResidentByPhone(String phone) {
+        return residentRepository.findByPhone(phone);
     }
 
     public Resident addResident(Resident resident) {
