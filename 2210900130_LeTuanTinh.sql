@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2025 at 09:48 AM
+-- Generation Time: Mar 22, 2025 at 09:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -102,19 +102,6 @@ INSERT INTO `contracts` (`contract_id`, `resident_id`, `apartment_id`, `start_da
 (3, 3, 3, '2023-03-10', '2026-03-10', 'Thuê'),
 (4, 4, 4, '2023-04-20', NULL, 'Mua'),
 (5, 5, 5, '2023-05-05', '2024-05-05', 'Thuê');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `employees`
---
-
-CREATE TABLE `employees` (
-  `employee_id` int(11) NOT NULL,
-  `full_name` varchar(100) NOT NULL,
-  `role` enum('Admin','Nhân viên','Bảo vệ') NOT NULL,
-  `shift_time` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -346,12 +333,6 @@ ALTER TABLE `contracts`
   ADD KEY `apartment_id` (`apartment_id`);
 
 --
--- Indexes for table `employees`
---
-ALTER TABLE `employees`
-  ADD PRIMARY KEY (`employee_id`);
-
---
 -- Indexes for table `invoices`
 --
 ALTER TABLE `invoices`
@@ -424,12 +405,6 @@ ALTER TABLE `complaints`
 --
 ALTER TABLE `contracts`
   MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `employees`
---
-ALTER TABLE `employees`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoices`
